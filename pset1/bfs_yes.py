@@ -29,7 +29,7 @@ def GetPathBFS(adj_dict, start, end):
     # Get the start time
     start_time = time.time()
 
-    # Keep searching through the graph as long as the visited list is not empty and the goal has not been reached.
+    # Keep searching through the graph as long as the queue is not empty.
     while queue_t:
         max_queue_size = max(max_queue_size, len(queue_t))
         # Remove the first path from the queue
@@ -47,6 +47,7 @@ def GetPathBFS(adj_dict, start, end):
                 queue_t.append(new_path)
                 if neighbor == end:
                     path_cost = len(new_path) - 1
+                    # Get the stoppage time when the path has been found.
                     end_time = time.time()
                     time_t = end_time - start_time
                     OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost)
@@ -55,14 +56,13 @@ def GetPathBFS(adj_dict, start, end):
             visited.append(node)
     return OutputResult('infeasible', 'infeasible', 'infeasible', 'infeasible')
     
-
 if __name__ == "__main__":
     # Get the adjacency list from adj_dict.
     adj_dict = adj_dict.adj_dict
 
     start = 'WA'
     end = 'GA'
-    
+
     GetPathBFS(adj_dict, start, end)
 
 # Reference: https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
