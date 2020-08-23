@@ -26,6 +26,9 @@ def GetPathDFS(adj_dict, start, end):
     # Get the start time
     start_time = time.time()
 
+    # Flag to check if a cycle is encountered.
+    cycle = False
+
     # Keep searching through the graph as long as the queue is not empty.
     while queue_t:
         max_queue_size = max(max_queue_size, len(queue_t))
@@ -40,6 +43,13 @@ def GetPathDFS(adj_dict, start, end):
         for neighbor in neighbors:
             new_path = list(path)
             new_path.append(neighbor)
+            # Using a heauristic approach to exit the loop when a cycle is detected.
+            # There are about 50 states, so we should not be detecting a path that is longer than 50
+            # If we do detect a path longer than 50, then this implies there is a cycle.
+            # Note: this does not address a case where the goal is not reachable in the first place. E.g. Hawaii.
+            if len(new_path) > 50:
+                cycle = True
+                break
             queue_t.append(new_path)
             if neighbor == end:
                 path_cost = len(new_path) - 1
@@ -49,6 +59,9 @@ def GetPathDFS(adj_dict, start, end):
                 OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost)
                 print(new_path)
                 return new_path
+        # Check if cycle has been detected.
+        if cycle:
+            break
     return OutputResult('infeasible', 'infeasible', 'infeasible', 'infeasible')
     
 if __name__ == "__main__":
