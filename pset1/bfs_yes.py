@@ -25,9 +25,6 @@ def GetPathBFS(adj_dict, start, end):
     # List to store visited nodes in the graph.
     visited = []
 
-    # List to store path from origin to destination.
-    path_to_goal = []
-
     # Keep searching through the graph as long as the visited list is not empty and the goal has not been reached.
     while queue_t:
         # Remove the first path from the queue
