@@ -9,7 +9,7 @@ def OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost):
     print("Max Queue Size: ", max_queue_size)
     print("Returned path's cost: ", path_cost)
 
-def GetPathBFS(adj_dict, start, end):
+def GetPathDFS(adj_dict, start, end):
     # Initialize results
     time_t = 0
     no_of_paths_popped = 0
@@ -33,7 +33,7 @@ def GetPathBFS(adj_dict, start, end):
     while queue_t:
         max_queue_size = max(max_queue_size, len(queue_t))
         # Remove the first path from the queue
-        path = queue_t.pop(0)
+        path = queue_t.pop()
         no_of_paths_popped += 1
         # Get the last node from the path
         node = path[-1]
@@ -63,6 +63,6 @@ if __name__ == "__main__":
     start = 'WA'
     end = 'GA'
 
-    GetPathBFS(adj_dict, start, end)
+    GetPathDFS(adj_dict, start, end)
 
 # Reference: https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
