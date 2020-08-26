@@ -9,6 +9,28 @@ def OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost):
     print("Returned path's cost: ", path_cost)
 
 def GetPathIDS(adj_dict, start, end):
+
+    def Ids(path2Goal, depth):
+        nonlocal no_of_paths_popped, max_queue_size
+
+        max_queue_size = max(max_queue_size, len(queue_t))
+        queue_t.pop()
+
+        if depth == 0:
+            no_of_paths_popped += 1
+            return
+        if path2Goal[-1] == end:
+            return path2Goal
+        neighbors = sorted(adj_dict[path2Goal[-1]])
+        # Loop through all the neighbors of the node.
+        # Create a new path for each neighbor and add the new path to the end of the queue.
+        for neighbor in neighbors:
+            queue_t.append(path2Goal)
+            if neighbor not in path2Goal:
+                new_path = Ids(path2Goal + [neighbor], depth - 1)
+                if new_path:
+                    return new_path
+
     # Initialize results
     time_t = 0
     no_of_paths_popped = 0
@@ -31,50 +53,22 @@ def GetPathIDS(adj_dict, start, end):
         queue_t = [[start]]
 
         depth += 1
-        print(depth)
-
-        # Get the first path in the queue.
-        path = queue_t[0]
-
-        # Flag to check if a cycle is encountered.
-        cycle = False
         
-        # Run DFS until the depth limit is reached.
-        while len(path) <= depth:
-            max_queue_size = max(max_queue_size, len(queue_t))
-            # Remove the first path from the queue
-            path = queue_t.pop()
-            no_of_paths_popped += 1
-            # Get the last node from the path
-            node = path[-1]
-            neighbors = sorted(adj_dict[node])
-            # Loop through all the neighbors of the node.
-            # Create a new path for each neighbor and add the new path to the end of the queue.
-            for neighbor in neighbors:
-                new_path = list(path)
-                new_path.append(neighbor)
-                # Using a heauristic approach to exit the loop when a cycle is detected.
-                # There are at most 50 nodes in the graph, so we should not be detecting a path that is longer than 50
-                # If we do detect a path longer than 50, then this implies there is a cycle.
-                # Note: this does not address a case where the goal is not reachable in the first place. E.g. Hawaii.
-                if len(new_path) > 50:
-                    cycle = True
-                    break
-                queue_t.append(new_path)
-                if neighbor == end:
-                    path_cost = len(new_path) - 1
-                    # Get the stoppage time when the path has been found.
-                    end_time = time.time()
-                    time_t = end_time - start_time
-                    OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost)
-                    return new_path
-        # Check if cycle has been detected.
-        if cycle:
-            break
+        path2Goal = Ids(queue_t[0], depth)
+
+        if path2Goal:
+            print(path2Goal)
+            path_cost = len(path2Goal) - 1
+            # Get the stoppage time when the path has been found.
+            end_time = time.time()
+            time_t = end_time - start_time
+            OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost)
+            return path2Goal
+
     return OutputResult('infeasible', 'infeasible', 'infeasible', 'infeasible')
     
 if __name__ == "__main__":
-    
+
     # Define graph with adjacency list.
     adj_dict = {
         'AL': ('MS', 'TN', 'GA', 'FL'),
@@ -132,5 +126,6 @@ if __name__ == "__main__":
     end = 'GA'
 
     GetPathIDS(adj_dict, start, end)
+    # Returned path: ['WA', 'ID', 'WY', 'NE', 'MO', 'TN', 'GA']
 
-# Reference: https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
+# Reference: https://eddmann.com/posts/using-iterative-deepening-depth-first-search-in-python/

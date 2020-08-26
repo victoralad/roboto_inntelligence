@@ -9,6 +9,31 @@ def OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost):
     print("Returned path's cost: ", path_cost)
 
 def GetPathIDS(adj_dict, start, end):
+
+    def Ids(path2Goal, depth):
+        nonlocal no_of_paths_popped, max_queue_size
+        no_of_paths_popped += 1
+
+        max_queue_size = max(max_queue_size, len(queue_t))
+        queue_t.pop()
+        print(path2Goal)
+        if depth == 0:
+            return
+        if path2Goal[-1] == end:
+            return path2Goal
+        if path2Goal[-1] not in visited:
+            neighbors = sorted(adj_dict[path2Goal[-1]])
+            # Loop through all the neighbors of the node.
+            # Create a new path for each neighbor and add the new path to the end of the queue.
+            for neighbor in neighbors:
+                queue_t.append(path2Goal)
+                if neighbor not in path2Goal:
+                    new_path = Ids(path2Goal + [neighbor], depth - 1)
+                    if new_path:
+                        return new_path
+            # Mark node as visited.
+            visited.append(path2Goal[-1])
+
     # Initialize results
     time_t = 0
     no_of_paths_popped = 0
@@ -30,39 +55,21 @@ def GetPathIDS(adj_dict, start, end):
         # Queue to traverse the graph and append the starting point.
         queue_t = [[start]]
 
-        # List to store visited nodes in the graph.
-        visited = []
-
         depth += 1
 
-        # Get the first path in the queue.
-        path = queue_t[0]
+        visited = []
+        
+        path2Goal = Ids(queue_t[0], depth)
 
-        # Run DFS until the depth limit is reached.
-        while len(path) <= depth:
-            max_queue_size = max(max_queue_size, len(queue_t))
-            # Remove the first path from the queue
-            path = queue_t.pop()
-            no_of_paths_popped += 1
-            # Get the last node from the path
-            node = path[-1]
-            if  node not in visited:
-                neighbors = sorted(adj_dict[node])
-                # Loop through all the neighbors of the node.
-                # Create a new path for each neighbor and add the new path to the end of the queue.
-                for neighbor in neighbors:
-                    new_path = list(path)
-                    new_path.append(neighbor)
-                    queue_t.append(new_path)
-                    if neighbor == end:
-                        path_cost = len(new_path) - 1
-                        # Get the stoppage time when the path has been found.
-                        end_time = time.time()
-                        time_t = end_time - start_time
-                        OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost)
-                        return new_path
-                # Mark node as visited.
-                visited.append(node)
+        if path2Goal:
+            print(path2Goal)
+            path_cost = len(path2Goal) - 1
+            # Get the stoppage time when the path has been found.
+            end_time = time.time()
+            time_t = end_time - start_time
+            OutputResult(time_t, no_of_paths_popped, max_queue_size, path_cost)
+            return path2Goal
+
     return OutputResult('infeasible', 'infeasible', 'infeasible', 'infeasible')
     
 if __name__ == "__main__":
@@ -124,5 +131,6 @@ if __name__ == "__main__":
     end = 'GA'
 
     GetPathIDS(adj_dict, start, end)
+    # Returned path: ['WA', 'ID', 'WY', 'NE', 'MO', 'TN', 'GA']
 
-# Reference: https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
+# Reference: https://eddmann.com/posts/using-iterative-deepening-depth-first-search-in-python/

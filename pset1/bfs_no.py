@@ -108,5 +108,6 @@ if __name__ == "__main__":
     end = 'GA'
 
     GetPathBFS(adj_dict, start, end)
+    # Returned path: ['WA', 'ID', 'WY', 'NE', 'MO', 'TN', 'GA']
 
 # Reference: https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
