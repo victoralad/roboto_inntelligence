@@ -16,7 +16,7 @@ def GetPathIDS(adj_dict, start, end):
 
         max_queue_size = max(max_queue_size, len(queue_t))
         queue_t.pop()
-        print(path2Goal)
+
         if depth == 0:
             return
         if path2Goal[-1] == end:
@@ -62,7 +62,6 @@ def GetPathIDS(adj_dict, start, end):
         path2Goal = Ids(queue_t[0], depth)
 
         if path2Goal:
-            print(path2Goal)
             path_cost = len(path2Goal) - 1
             # Get the stoppage time when the path has been found.
             end_time = time.time()
@@ -131,6 +130,6 @@ if __name__ == "__main__":
     end = 'GA'
 
     GetPathIDS(adj_dict, start, end)
-    # Returned path: ['WA', 'ID', 'WY', 'NE', 'MO', 'TN', 'GA']
+    # Returned path: ['WA', 'ID', 'MT', 'ND', 'MN', 'IA', 'IL', 'IN', 'KY', 'VA', 'NC', 'GA']
 
 # Reference: https://eddmann.com/posts/using-iterative-deepening-depth-first-search-in-python/

@@ -12,12 +12,12 @@ def GetPathIDS(adj_dict, start, end):
 
     def Ids(path2Goal, depth):
         nonlocal no_of_paths_popped, max_queue_size
+        no_of_paths_popped += 1
 
         max_queue_size = max(max_queue_size, len(queue_t))
         queue_t.pop()
 
         if depth == 0:
-            no_of_paths_popped += 1
             return
         if path2Goal[-1] == end:
             return path2Goal
@@ -57,7 +57,6 @@ def GetPathIDS(adj_dict, start, end):
         path2Goal = Ids(queue_t[0], depth)
 
         if path2Goal:
-            print(path2Goal)
             path_cost = len(path2Goal) - 1
             # Get the stoppage time when the path has been found.
             end_time = time.time()
