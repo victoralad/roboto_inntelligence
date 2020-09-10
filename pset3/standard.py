@@ -3,49 +3,76 @@
 import numpy as np
 import itertools
 
-def CSP(board_state):
-    # Check that row constraint is satisfied.
-    print(board_state)
-    if len(set(board_state)) != len(board_state):
-        return False
-    # Check that diagonal constraint is satisfied.
-    output = list(itertools.combinations(enumerate(board_state), 2))
-    for i in range(len(output)):
-        if output[i][0][1] - output[i][1][1] == output[i][0][0] - output[i][1][0]:
-            return False
+""" Python3 program to solve N Queen Problem using  
+backtracking """
+N = 4
+  
+""" ld is an array where its indices indicate row-col+N-1  
+(N-1) is for shifting the difference to store negative  
+indices """
+ld = [0] * 2*N
+  
+""" rd is an array where its indices indicate row+col  
+and used to check whether a queen can be placed on  
+right diagonal or not"""
+rd = [0] * 2*N
+  
+"""column array where its indices indicates column and  
+used to check whether a queen can be placed in that  
+    row or not"""
+cl = [0] * 2*N
+  
+""" A recursive utility function to solve N  
+Queen problem """
+def backtrackNQUtil(board, col):  
+      
+    """ base case: If all queens are placed 
+        then return True """
+    if (col >= N): 
+        return True
+          
+    """ Consider this column and try placing 
+        this queen in all rows one by one """
+    for i in range(N): 
+          
+        """ Check if the queen can be placed on board[i][col] """
+        """ A check if a queen can be placed on board[row][col]. 
+        We just need to check ld[row-col+n-1] and rd[row+coln]  
+        where ld and rd are for left and right diagonal respectively"""
+        if ((ld[i - col + N - 1] != 1 and 
+             rd[i + col] != 1) and cl[i] != 1): 
+                   
+            """ Place this queen in board[i][col] """
+            board[i][col] = 1
+            ld[i - col + N - 1] = rd[i + col] = cl[i] = 1
+              
+            """ recur to place rest of the queens """
+            if (backtrackNQUtil(board, col + 1)): 
+                return True
+                  
+            """ If placing queen in board[i][col]  
+            doesn't lead to a solution,  
+            then remove queen from board[i][col] """
+            board[i][col] = 0 # BACKTRACK  
+            ld[i - col + N - 1] = rd[i + col] = cl[i] = 0
+              
+            """ If the queen cannot be placed in 
+            any row in this colum col then return False """
+    return False
+      
+""" This function solves the N Queen problem using  
+Backtracking. It mainly uses backtrackNQUtil() to  
+solve the problem. It returns False if queens  
+cannot be placed, otherwise, return True and  
+prints placement of queens in the form of 1s.  
+Please note that there may be more than one  
+solutions, this function prints one of the  
+feasible solutions."""
+def backtrack(): 
+    board = np.zeros((N, N), dtype=int)
+    backtrackNQUtil(board, 0)
+    print(board) 
     return True
-
-def DFS(board_state, found=False):
-
-    if found or CSP(board_state):
-        found = True
-        return board_state
-    
-    for i in range(len(board_state)):
-        for j in range(len(board_state)):
-            board_state[i] += j
-            DFS(board_state)
-            
-    return board_state
-
-	# queue = []  # initialize q to empty list
-	# path = [board_state]
-	# visited_list = [board_state]  # initialize the visited list with start node
-	# while CSP(board_state) is False:
-	# 	children = graph[path[-1]]  # returns a list of neighboring nodes
-	# 	for child in reversed(children):
-	# 		if child not in visited_list:
-	# 			visited_list.append(child)
-	# 			queue.append(copy.deepcopy(path) + [child])  # add to queue
-	# 	print(queue)
-	# 	path = queue.pop()  # get the next path
-	# return board_state
-
-if __name__ == "__main__":
-    n = 4
-    board_state = np.ones(n, dtype=int).tolist()
-    # print(board_state)
-    valid_state = DFS(board_state)
-    # print(valid_state)
-
-# Reference: Used part of solution code for dfs with visited list, from Pset1.
+      
+# Driver Code 
+backtrack()
