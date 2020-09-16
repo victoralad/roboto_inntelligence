@@ -3,8 +3,8 @@
 import operator
 import numpy as np
 import shapely.geometry as sg
-# import networkx as nx
-# import matplotlib.pyplot as plt
+import networkx as nx
+import matplotlib.pyplot as plt
 
 class RRT:
     def __init__(self, start, obstacle):
@@ -15,7 +15,7 @@ class RRT:
 
     # Find the nearest node on the tree to x_rand.
     def Nearest(self, x_rand):
-        min_dist = -1.0
+        min_dist = float("inf")
         x_nearest = self.vertices[0]
         for vertex in self.vertices:
             if np.linalg.norm(tuple(map(operator.sub, x_rand, vertex))) < min_dist:
@@ -32,14 +32,16 @@ class RRT:
     # Check that the edge connected x_nearest and x_new
     # does not pass through the obstacle region.
     def ObstacleFree(self, x_nearest, x_new):
-        line = sg.LineString([(0, 0), (1, 1)])
+        line = sg.LineString([x_nearest, x_new])
+        if line.intersection(self.obstacle):
+            return False
         return True
     
 def getTree(num_iterations):
     # Define properties of the tree.
     start = (1, 1)
     goal = (9, 9)
-    obstacle = [(3, 3), (7, 7), (3, 7), (7, 3)]
+    obstacle = [(3, 3), (3, 7), (7, 7), (7, 3)]
     world_size = 10 # (0, 0) -> (10, 10)
 
     rrt = RRT(start, obstacle)
@@ -56,11 +58,11 @@ def getTree(num_iterations):
     return rrt.vertices, rrt.edges
 
 if __name__ == "__main__":
-    vertices, edges = getTree(10)
-    # G = nx.Graph()
-    # G.add_nodes_from(vertices)
-    # G.add_edges_from(edges)
-    # nx.draw(G)
-    # # nx.draw(G, with_labels=True)
-    # plt.show()
+    vertices, edges = getTree(100)
+    G = nx.Graph()
+    G.add_nodes_from(vertices)
+    G.add_edges_from(edges)
+    nx.draw(G)
+    # nx.draw(G, with_labels=True)
+    plt.show()
     
