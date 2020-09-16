@@ -2,30 +2,18 @@
 
 import numpy as np
 
+class Node:
+    def __init__(self, location):
+        assert location is not None
+        self.location = location
+        self.next_node = None
+        print(self.location)
+
 class RRT:
     def __init__(self):
+        start = Node((1, 1))
         
-        self.world = self.create_world()
-        print(np.flip(self.world, 0))
-    def create_world(self):
-
-        world = np.array([])
-
-        for i in range(10):
-            world = np.append(world, '0')
-
-        self.world = np.array([world])
-        
-        for i in range(9):
-            self.world = np.vstack([self.world, world])
-
-        # Define goal region.
-        self.world[8][8] = 'G'
-        # Define start region.
-        self.world[1][1] = 'S'
-
-        return self.world
 
 if __name__ == "__main__":
     rrt = RRT()
-    rrt.create_world()
+    # rrt.create_world()
