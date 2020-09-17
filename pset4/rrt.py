@@ -58,22 +58,21 @@ def getTree(num_iterations):
     return rrt.vertices, rrt.edges
 
 if __name__ == "__main__":
-    vertices, edges = getTree(20)
+    vertices, edges = getTree(100)
     G = nx.Graph()
-    # key = list(range(1, len(vertices) + 1))
-    # pos = dict(zip(key, vertices))
+    color = []
     for i in range(len(vertices)):
         if i == 0:
-            G.add_node(vertices[i], pos=vertices[i], color='blue')
+            G.add_node(vertices[i], pos=vertices[i])
+            color.append('blue')
         else:
-            G.add_node(vertices[i], pos=vertices[i], color='green')
+            G.add_node(vertices[i], pos=vertices[i])
+            color.append('green')
     # G.add_nodes_from(vertices)
     G.add_edges_from(edges)
     options = {'node_size':10, 'with_labels':False}
     pos=nx.get_node_attributes(G,'pos')
-    color=nx.get_node_attributes(G,'color')
-    print(pos)
-    nx.draw(G, pos=pos, **options)
+    nx.draw(G, pos=pos, node_color=color, **options)
     plt.savefig("rrt.png")
     plt.show()
     
