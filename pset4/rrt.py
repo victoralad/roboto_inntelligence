@@ -76,7 +76,6 @@ if __name__ == "__main__":
     color.append('red')
     node_size.append(100)
     G.add_edges_from(edges)
-    # options = {'node_size':10, 'with_labels':False}
     pos=nx.get_node_attributes(G,'pos')
     nx.draw(G, pos=pos, node_color=color, node_size=node_size)
     plt.savefig("rrt.png")
