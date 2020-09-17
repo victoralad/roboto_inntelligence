@@ -5,6 +5,7 @@ import numpy as np
 import shapely.geometry as sg
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 class RRT:
     def __init__(self, start, obstacle):
@@ -58,7 +59,7 @@ def getTree(num_iterations):
     return rrt.vertices, rrt.edges
 
 if __name__ == "__main__":
-    vertices, edges = getTree(100)
+    vertices, edges = getTree(1000)
     G = nx.Graph()
     color = []
     node_size = []
@@ -78,6 +79,12 @@ if __name__ == "__main__":
     G.add_edges_from(edges)
     pos=nx.get_node_attributes(G,'pos')
     nx.draw(G, pos=pos, node_color=color, node_size=node_size)
+
+    O = nx.Graph()
+    O.add_node((5, 5), pos=(5, 5))
+    pos=nx.get_node_attributes(O,'pos')
+    nx.draw(O, pos=pos, node_shape='s', node_color='black', node_size=70000)
+
     plt.savefig("rrt.png")
     plt.show()
     
