@@ -61,18 +61,24 @@ if __name__ == "__main__":
     vertices, edges = getTree(100)
     G = nx.Graph()
     color = []
+    node_size = []
     for i in range(len(vertices)):
         if i == 0:
             G.add_node(vertices[i], pos=vertices[i])
             color.append('blue')
+            node_size.append(100)
         else:
             G.add_node(vertices[i], pos=vertices[i])
             color.append('green')
-    # G.add_nodes_from(vertices)
+            node_size.append(10)
+    goal = (9, 9)
+    G.add_node((9, 9), pos=(9, 9))
+    color.append('red')
+    node_size.append(100)
     G.add_edges_from(edges)
-    options = {'node_size':10, 'with_labels':False}
+    # options = {'node_size':10, 'with_labels':False}
     pos=nx.get_node_attributes(G,'pos')
-    nx.draw(G, pos=pos, node_color=color, **options)
+    nx.draw(G, pos=pos, node_color=color, node_size=node_size)
     plt.savefig("rrt.png")
     plt.show()
     
