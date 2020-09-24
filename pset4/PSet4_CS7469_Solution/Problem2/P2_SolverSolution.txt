@@ -1,0 +1,17 @@
+Lunar >>>
+================== Solution Found =======================
+(navigate site_a site_c)
+(science site_c)
+(navigate site_c site_a)
+(pickup cargo_a site_a)
+(navigate site_a site_b)
+(dropoff cargo_a site_b)
+=========================================================
+
+
+
+Blocksworld >>>
+================== Solution Found =======================
+(pickup a)
+(stack a b)
+=========================================================
