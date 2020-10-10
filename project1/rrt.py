@@ -58,38 +58,36 @@ def getTree(num_iterations):
     #         rrt.edges.append([x_nearest, x_new])
     # return rrt.vertices, rrt.edges
 
+
 if __name__ == "__main__":
+
+    # ---------------------------------Get Environment parameters ------------------------
+
+    # Set map coordinates.
+    map_coord = [0, 100, 0, 100]
+
+    # Get start coordinates (x, y, theta).
+    start_coord = open('start.txt', 'r').read()
+    start_coord = list(map(float, start_coord.split(',')))
+
+    # Get goal coordinates (x, y).
+    goal_coord = open('goal.txt', 'r').read()
+    goal_coord = list(map(float, goal_coord.split(',')))
+
+    # Get the coordinates of the obstacles.
     obstacle_coords = open('obstacles.txt', 'r').read().split()
     for i in range(len(obstacle_coords)):
         obstacle_coords[i] = list(map(float, obstacle_coords[i].split(',')))
     
     # vertices, edges = getTree(1000)
-    # G = nx.Graph()
-    # color = []
-    # node_size = []
-    # for i in range(len(vertices)):
-    #     if i == 0:
-    #         G.add_node(vertices[i], pos=vertices[i])
-    #         color.append('blue')
-    #         node_size.append(100)
-    #     else:
-    #         G.add_node(vertices[i], pos=vertices[i])
-    #         color.append('green')
-    #         node_size.append(10)
-    # goal = (9, 9)
-    # G.add_node((9, 9), pos=(9, 9))
-    # color.append('red')
-    # node_size.append(100)
-    # G.add_edges_from(edges)
-    # pos=nx.get_node_attributes(G,'pos')
-    # nx.draw(G, pos=pos, node_color=color, node_size=node_size)
 
-    # O = nx.Graph()
-    # O.add_node((5, 5), pos=(5, 5))
-    # pos=nx.get_node_attributes(O,'pos')
-    # nx.draw(O, pos=pos, node_shape='s', node_color='black', node_size=70000)
+    # -------------------------------------- Create Plots ---------------------------------
+    
+    # Plot the start and goal locations.
+    plt.plot(start_coord[0], start_coord[1], "sm", markersize=20)
+    plt.plot(goal_coord[0], goal_coord[1], "sg", markersize=20)
 
-
+    # Plot the obstacles.
     for obstacle in obstacle_coords:
         obstacle_shape = mpatches.Circle((obstacle[0], obstacle[1]), obstacle[2], color='k')
         plt.gca().add_patch(obstacle_shape)
