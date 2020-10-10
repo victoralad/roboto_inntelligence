@@ -40,24 +40,64 @@ class RRT:
     
 def getTree(num_iterations):
     # Define properties of the tree.
-    start = (1, 1)
+    start = (x0, y0, theta0) 
     goal = (9, 9)
     obstacle = [(3, 3), (3, 7), (7, 7), (7, 3)]
     world_size = 10 # (0, 0) -> (10, 10)
 
-    rrt = RRT(start, obstacle)
+    # rrt = RRT(start, obstacle)
 
-    for i in range(num_iterations):
-        # To generate a 2D point between points A = (0, 0) and B = (10, 10)
-        # use the formula A + (B - A)*rand(2)
-        x_rand = tuple(world_size * np.random.rand(2))
-        x_nearest = rrt.Nearest(x_rand)
-        x_new = rrt.Steer(x_nearest, x_rand)
-        if rrt.ObstacleFree(x_nearest, x_new):
-            rrt.vertices.append(x_new)
-            rrt.edges.append([x_nearest, x_new])
-    return rrt.vertices, rrt.edges
+    # for i in range(num_iterations):
+    #     # To generate a 2D point between points A = (0, 0) and B = (10, 10)
+    #     # use the formula A + (B - A)*rand(2)
+    #     x_rand = tuple(world_size * np.random.rand(2))
+    #     x_nearest = rrt.Nearest(x_rand)
+    #     x_new = rrt.Steer(x_nearest, x_rand)
+    #     if rrt.ObstacleFree(x_nearest, x_new):
+    #         rrt.vertices.append(x_new)
+    #         rrt.edges.append([x_nearest, x_new])
+    # return rrt.vertices, rrt.edges
 
 if __name__ == "__main__":
-    vertices, edges = getTree(1000)
+    obstacle_coords = open('obstacles.txt', 'r').read().split()
+    for i in range(len(obstacle_coords)):
+        obstacle_coords[i] = list(map(float, obstacle_coords[i].split(',')))
     
+    # vertices, edges = getTree(1000)
+    # G = nx.Graph()
+    # color = []
+    # node_size = []
+    # for i in range(len(vertices)):
+    #     if i == 0:
+    #         G.add_node(vertices[i], pos=vertices[i])
+    #         color.append('blue')
+    #         node_size.append(100)
+    #     else:
+    #         G.add_node(vertices[i], pos=vertices[i])
+    #         color.append('green')
+    #         node_size.append(10)
+    # goal = (9, 9)
+    # G.add_node((9, 9), pos=(9, 9))
+    # color.append('red')
+    # node_size.append(100)
+    # G.add_edges_from(edges)
+    # pos=nx.get_node_attributes(G,'pos')
+    # nx.draw(G, pos=pos, node_color=color, node_size=node_size)
+
+    # O = nx.Graph()
+    # O.add_node((5, 5), pos=(5, 5))
+    # pos=nx.get_node_attributes(O,'pos')
+    # nx.draw(O, pos=pos, node_shape='s', node_color='black', node_size=70000)
+
+
+    for obstacle in obstacle_coords:
+        obstacle_shape = mpatches.Circle((obstacle[0], obstacle[1]), obstacle[2], color='k')
+        plt.gca().add_patch(obstacle_shape)
+    
+    plt.axis([0, 100, 0, 100])
+    plt.title('RRT Map and Final Planned Path')
+    plt.ylabel('Y')
+    plt.xlabel('X')
+
+    plt.savefig("rrt.png")
+    plt.show()
