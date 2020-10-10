@@ -1,3 +1,5 @@
+#!/usr/bin/env python3.6
+
 # CS 4649/7469 - PSet3: Problem 3
 # Solution (by E. Seraj - TA)
 
