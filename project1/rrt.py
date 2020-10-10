@@ -38,25 +38,23 @@ class RRT:
             return False
         return True
     
-def getTree(num_iterations):
-    # Define properties of the tree.
-    start = (x0, y0, theta0) 
-    goal = (9, 9)
-    obstacle = [(3, 3), (3, 7), (7, 7), (7, 3)]
-    world_size = 10 # (0, 0) -> (10, 10)
+def getTree(num_iterations, start, goal, obstacles):
+    world_size = 100 # (0, 0) -> (100, 100)
+    # start = tuple([start[0], start[1]])
+    # print(start)
 
-    # rrt = RRT(start, obstacle)
+    rrt = RRT(start, obstacles)
 
-    # for i in range(num_iterations):
-    #     # To generate a 2D point between points A = (0, 0) and B = (10, 10)
-    #     # use the formula A + (B - A)*rand(2)
-    #     x_rand = tuple(world_size * np.random.rand(2))
-    #     x_nearest = rrt.Nearest(x_rand)
-    #     x_new = rrt.Steer(x_nearest, x_rand)
-    #     if rrt.ObstacleFree(x_nearest, x_new):
-    #         rrt.vertices.append(x_new)
-    #         rrt.edges.append([x_nearest, x_new])
-    # return rrt.vertices, rrt.edges
+    for i in range(num_iterations):
+        # To generate a 2D point between points A = (0, 0) and B = (10, 10)
+        # use the formula A + (B - A)*rand(2)
+        x_rand = tuple(world_size * np.random.rand(2))
+        x_nearest = rrt.Nearest(x_rand)
+        x_new = rrt.Steer(x_nearest, x_rand)
+        if rrt.ObstacleFree(x_nearest, x_new):
+            rrt.vertices.append(x_new)
+            rrt.edges.append([x_nearest, x_new])
+    return rrt.vertices, rrt.edges
 
 
 if __name__ == "__main__":
@@ -68,18 +66,18 @@ if __name__ == "__main__":
 
     # Get start coordinates (x, y, theta).
     start_coord = open('start.txt', 'r').read()
-    start_coord = list(map(float, start_coord.split(',')))
+    start_coord = tuple(map(float, start_coord.split(',')))
 
     # Get goal coordinates (x, y).
     goal_coord = open('goal.txt', 'r').read()
-    goal_coord = list(map(float, goal_coord.split(',')))
+    goal_coord = tuple(map(float, goal_coord.split(',')))
 
     # Get the coordinates of the obstacles.
     obstacle_coords = open('obstacles.txt', 'r').read().split()
     for i in range(len(obstacle_coords)):
-        obstacle_coords[i] = list(map(float, obstacle_coords[i].split(',')))
+        obstacle_coords[i] = tuple(map(float, obstacle_coords[i].split(',')))
     
-    # vertices, edges = getTree(1000)
+    vertices, edges = getTree(1000, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
