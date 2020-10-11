@@ -32,11 +32,11 @@ class RRT:
         x_new = x_rand
         return x_new
     
-    # Check that the edge connected x_nearest and x_new
-    # does not pass through the any of the obstacle regions.
+    # Check that the edge connected x_nearest and x_new does not pass through the any of the obstacle regions.
+    # Return True if collision occurs and return false otherwise.
     def ObstacleFree(self, x_nearest, x_new):
         line = sg.LineString([x_nearest, x_new])
-        return all(line.intersection(obstacle) for obstacle in self.obstacles)
+        return not all(line.intersection(obstacle) for obstacle in self.obstacles)
         # if line.intersection(self.obstacles):
         #     return False
         # return True
@@ -84,8 +84,31 @@ if __name__ == "__main__":
     
     vertices, edges = getTree(100, start_coord, goal_coord, obstacle_coords)
 
+    # # plotting the map (tree)
+    # for vertex in vertices:
+    #     plt.plot([vertex, node.parent.x], [node.y, node.parent.y], "-b", linewidth=2)
+    #     plt.plot(node.x, node.y, ".r")
+
+    # G = nx.Graph()
+    # color = []
+    # node_size = []
+    # for i in range(len(vertices)):
+    #     if i == 0:
+    #         G.add_node(vertices[i], pos=vertices[i])
+    #         color.append('blue')
+    #         node_size.append(100)
+    #     else:
+    #         G.add_node(vertices[i], pos=vertices[i])
+    #         color.append('green')
+    #         node_size.append(10)
+    # G.add_edges_from(edges)
+    # pos=nx.get_node_attributes(G,'pos')
+    # nx.draw(G, pos=pos, node_color=color, node_size=node_size)
+
     # -------------------------------------- Create Plots ---------------------------------
     
+    plt.figure(num=1, figsize=(10, 10), dpi=100, facecolor='w', edgecolor='k')
+
     # Plot the start and goal locations.
     plt.plot(start_coord[0], start_coord[1], "sm", markersize=20)
     plt.plot(goal_coord[0], goal_coord[1], "sg", markersize=20)
