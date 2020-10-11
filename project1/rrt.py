@@ -3,8 +3,6 @@
 import operator
 import math
 import numpy as np
-import shapely.geometry as sg
-import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
@@ -47,7 +45,8 @@ class RRT:
         # to the center of each obstacle (circle) in obstacles.
         distances = [[abs(a*obstacle[0] + b*obstacle[1] + c) / math.sqrt(a**2 + b**2), obstacle[2]] for obstacle in self.obstacles]
         # Check that the distance to each obstacle is greater than the radius of each obstacle.
-        return all(distance[0] > distance[1] for distance in distances)
+        # Add a buffer of 1.0 to account for the radius of the robot (1.0 m).
+        return all(distance[0] > distance[1] + 1.0 for distance in distances)
     
 def getTree(num_iterations, start, goal, obstacles):
     world_size = 100 # (0, 0) -> (100, 100)
@@ -91,7 +90,7 @@ if __name__ == "__main__":
 
     # ----------------------------------------- Run RRT ----------------------------------------
     
-    vertices, edges = getTree(1000, start_coord, goal_coord, obstacle_coords)
+    vertices, edges = getTree(100, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
@@ -106,8 +105,8 @@ if __name__ == "__main__":
         plt.plot(vertex[0], vertex[1], ".r")
 
     # Plot the start and goal locations.
-    plt.plot(start_coord[0], start_coord[1], "sm", markersize=20)
-    plt.plot(goal_coord[0], goal_coord[1], "sg", markersize=20)
+    plt.plot(start_coord[0], start_coord[1], "om", markersize=20)
+    plt.plot(goal_coord[0], goal_coord[1], "og", markersize=20)
 
     # Plot the obstacles.
     for obstacle in obstacle_coords:
