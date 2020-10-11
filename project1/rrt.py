@@ -82,32 +82,16 @@ if __name__ == "__main__":
 
     # ----------------------------------------- Run RRT ----------------------------------------
     
-    vertices, edges = getTree(100, start_coord, goal_coord, obstacle_coords)
-
-    # # plotting the map (tree)
-    # for vertex in vertices:
-    #     plt.plot([vertex, node.parent.x], [node.y, node.parent.y], "-b", linewidth=2)
-    #     plt.plot(node.x, node.y, ".r")
-
-    # G = nx.Graph()
-    # color = []
-    # node_size = []
-    # for i in range(len(vertices)):
-    #     if i == 0:
-    #         G.add_node(vertices[i], pos=vertices[i])
-    #         color.append('blue')
-    #         node_size.append(100)
-    #     else:
-    #         G.add_node(vertices[i], pos=vertices[i])
-    #         color.append('green')
-    #         node_size.append(10)
-    # G.add_edges_from(edges)
-    # pos=nx.get_node_attributes(G,'pos')
-    # nx.draw(G, pos=pos, node_color=color, node_size=node_size)
+    vertices, edges = getTree(1000, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
     plt.figure(num=1, figsize=(10, 10), dpi=100, facecolor='w', edgecolor='k')
+
+    # plotting the map (tree)
+    for edge in edges:
+        plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], "-b", linewidth=2)
+        plt.plot(edge[0][0], edge[0][1], ".r")
 
     # Plot the start and goal locations.
     plt.plot(start_coord[0], start_coord[1], "sm", markersize=20)
@@ -117,7 +101,7 @@ if __name__ == "__main__":
     for obstacle in obstacle_coords:
         obstacle_shape = mpatches.Circle((obstacle[0], obstacle[1]), obstacle[2], color='k')
         plt.gca().add_patch(obstacle_shape)
-    
+
     plt.axis([0, 100, 0, 100])
     plt.title('RRT Map and Final Planned Path')
     plt.ylabel('Y')
