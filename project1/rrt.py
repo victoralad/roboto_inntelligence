@@ -11,8 +11,14 @@ class RRT:
     def __init__(self, start, obstacles):
         self.start = start
         # Create obstacles that are circular using sg.Point(x,y).buffer(radius) and list comprehension in Python.
-        self.obstacles = [sg.Point(obstacle[0], obstacle[1]).buffer(obstacle[2]) for obstacle in obstacles]
-        print(len(self.obstacles))
+        self.obstacles = [sg.Point(obstacle[0], obstacle[1]).buffer(obstacle[2]).boundary for obstacle in obstacles]
+        # print(self.obstacles[0])
+        # temp = [(3, 3), (3, 7), (7, 7), (7, 3)]
+        # print(sg.Polygon(temp))
+        # temp = sg.Point(1, 2).buffer(2)
+        # print(temp)
+        # print(list(temp.exterior.coords))
+
         self.vertices = [self.start]
         self.edges = []
 
@@ -34,9 +40,18 @@ class RRT:
     
     # Check that the edge connected x_nearest and x_new does not pass through the any of the obstacle regions.
     # Return True if collision occurs and return false otherwise.
-    def ObstacleFree(self, x_nearest, x_new):
+    def CollisionFree(self, x_nearest, x_new):
         line = sg.LineString([x_nearest, x_new])
-        return not all(line.intersection(obstacle) for obstacle in self.obstacles)
+        # # linestrings = list(self.obstacles.exterior.coords)
+        # # print(linestrings)
+        # for obstacle in self.obstacles:
+        #     print(list(obstacle.exterior.coords))
+        #     collision = all(line.intersection(sg.LineStringlinestring) for linestring in list(obstacle.exterior.coords))
+        #     if collision:
+        #         return False
+        # return True
+        print(self.obstacles[0])
+        return not all(line.intersection(sg.LineString(obstacle.exterior.coords)) for obstacle in self.obstacles)
         # if line.intersection(self.obstacles):
         #     return False
         # return True
@@ -54,9 +69,11 @@ def getTree(num_iterations, start, goal, obstacles):
         x_rand = tuple(world_size * np.random.rand(2))
         x_nearest = rrt.Nearest(x_rand)
         x_new = rrt.Steer(x_nearest, x_rand)
-        if rrt.ObstacleFree(x_nearest, x_new):
+        if rrt.CollisionFree(x_nearest, x_new):
+            print(x_new)
             rrt.vertices.append(x_new)
             rrt.edges.append([x_nearest, x_new])
+            break
     return rrt.vertices, rrt.edges
 
 
@@ -82,7 +99,7 @@ if __name__ == "__main__":
 
     # ----------------------------------------- Run RRT ----------------------------------------
     
-    vertices, edges = getTree(1000, start_coord, goal_coord, obstacle_coords)
+    vertices, edges = getTree(100, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
