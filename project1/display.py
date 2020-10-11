@@ -3,8 +3,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-
-    
 def Display(start_coord, goal_coord, obstacle_coords, vertices, edges):
 
     # -------------------------------------- Create Plots ---------------------------------
@@ -14,14 +12,11 @@ def Display(start_coord, goal_coord, obstacle_coords, vertices, edges):
     # Plotting the map (tree).
     # Plot edges.
     for edge in edges:
-        plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], "-b", linewidth=2)
-    # Plot vertices.
-    for vertex in vertices:
-        plt.plot(vertex[0], vertex[1], ".r")
+        plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], color="purple", linewidth=2)
 
     # Plot the start and goal locations.
-    plt.plot(start_coord[0], start_coord[1], "om", markersize=20)
-    plt.plot(goal_coord[0], goal_coord[1], "og", markersize=20)
+    plt.plot(start_coord[0], start_coord[1], "og", markersize=10)
+    plt.plot(goal_coord[0], goal_coord[1], "ob", markersize=10)
 
     # Plot the obstacles.
     for obstacle in obstacle_coords:
