@@ -8,9 +8,11 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 class RRT:
-    def __init__(self, start, obstacle):
+    def __init__(self, start, obstacles):
         self.start = start
-        self.obstacle = sg.Polygon(obstacle)
+        # Create obstacles that are circular using sg.Point(x,y).buffer(radius) and list comprehension in Python.
+        self.obstacles = [sg.Point(obstacle[0], obstacle[1]).buffer(obstacle[2]) for obstacle in obstacles]
+        print(len(self.obstacles))
         self.vertices = [self.start]
         self.edges = []
 
@@ -31,22 +33,23 @@ class RRT:
         return x_new
     
     # Check that the edge connected x_nearest and x_new
-    # does not pass through the obstacle region.
+    # does not pass through the any of the obstacle regions.
     def ObstacleFree(self, x_nearest, x_new):
         line = sg.LineString([x_nearest, x_new])
-        if line.intersection(self.obstacle):
-            return False
-        return True
+        return all(line.intersection(obstacle) for obstacle in self.obstacles)
+        # if line.intersection(self.obstacles):
+        #     return False
+        # return True
     
 def getTree(num_iterations, start, goal, obstacles):
     world_size = 100 # (0, 0) -> (100, 100)
-    # start = tuple([start[0], start[1]])
-    # print(start)
+    start = tuple([start[0], start[1]])
+    # print(obstacles)
 
     rrt = RRT(start, obstacles)
 
     for i in range(num_iterations):
-        # To generate a 2D point between points A = (0, 0) and B = (10, 10)
+        # To generate a random 2D point in a plane with corners A = (0, 0) and B = (100, 100)
         # use the formula A + (B - A)*rand(2)
         x_rand = tuple(world_size * np.random.rand(2))
         x_nearest = rrt.Nearest(x_rand)
@@ -76,8 +79,10 @@ if __name__ == "__main__":
     obstacle_coords = open('obstacles.txt', 'r').read().split()
     for i in range(len(obstacle_coords)):
         obstacle_coords[i] = tuple(map(float, obstacle_coords[i].split(',')))
+
+    # ----------------------------------------- Run RRT ----------------------------------------
     
-    vertices, edges = getTree(1000, start_coord, goal_coord, obstacle_coords)
+    vertices, edges = getTree(100, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
