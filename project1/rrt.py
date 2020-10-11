@@ -38,17 +38,16 @@ class RRT:
         # dist = |a*x0 + b*y0 + c| / sqrt(a^2 + b^2)
         # where the equation of the line is given by: ax + by + c = 0
         # and the center of the circle is located at (x0,y0).
+        # Reference: https://www.geeksforgeeks.org/python-math-function-sqrt/
         line_slope = (x_new[1] - x_nearest[1]) / (x_new[0] - x_nearest[0])
-        a = line_slope
+        a = -line_slope
         b = 1
-        c = -line_slope * x_nearest[0] + x_nearest[1]
-        # dist = abs(a*x0 + b*y0 + c) / sqrt(a^2 + b^2)
+        c = line_slope * x_nearest[0] - x_nearest[1]
+        # Calculate the shortest distance from the line segment [x_nearest, x_new]
+        # to the center of each obstacle (circle) in obstacles.
         distances = [[abs(a*obstacle[0] + b*obstacle[1] + c) / math.sqrt(a**2 + b**2), obstacle[2]] for obstacle in self.obstacles]
-        print(distances)
+        # Check that the distance to each obstacle is greater than the radius of each obstacle.
         return all(distance[0] > distance[1] for distance in distances)
-        # if line.intersection(self.obstacles):
-        #     return False
-        # return True
     
 def getTree(num_iterations, start, goal, obstacles):
     world_size = 100 # (0, 0) -> (100, 100)
@@ -64,7 +63,7 @@ def getTree(num_iterations, start, goal, obstacles):
         x_nearest = rrt.Nearest(x_rand)
         x_new = rrt.Steer(x_nearest, x_rand)
         if rrt.CollisionFree(x_nearest, x_new):
-            print(x_new)
+            # print(x_new)
             rrt.vertices.append(x_new)
             rrt.edges.append([x_nearest, x_new])
     return rrt.vertices, rrt.edges
@@ -92,16 +91,19 @@ if __name__ == "__main__":
 
     # ----------------------------------------- Run RRT ----------------------------------------
     
-    vertices, edges = getTree(2, start_coord, goal_coord, obstacle_coords)
+    vertices, edges = getTree(1000, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
     plt.figure(num=1, figsize=(10, 10), dpi=100, facecolor='w', edgecolor='k')
 
-    # plotting the map (tree)
+    # Plotting the map (tree).
+    # Plot edges.
     for edge in edges:
         plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], "-b", linewidth=2)
-        plt.plot(edge[0][0], edge[0][1], ".r")
+    # Plot vertices.
+    for vertex in vertices:
+        plt.plot(vertex[0], vertex[1], ".r")
 
     # Plot the start and goal locations.
     plt.plot(start_coord[0], start_coord[1], "sm", markersize=20)
