@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import operator
+import math
 import numpy as np
 import shapely.geometry as sg
 import networkx as nx
@@ -10,15 +11,7 @@ import matplotlib.patches as mpatches
 class RRT:
     def __init__(self, start, obstacles):
         self.start = start
-        # Create obstacles that are circular using sg.Point(x,y).buffer(radius) and list comprehension in Python.
-        self.obstacles = [sg.Point(obstacle[0], obstacle[1]).buffer(obstacle[2]).boundary for obstacle in obstacles]
-        # print(self.obstacles[0])
-        # temp = [(3, 3), (3, 7), (7, 7), (7, 3)]
-        # print(sg.Polygon(temp))
-        # temp = sg.Point(1, 2).buffer(2)
-        # print(temp)
-        # print(list(temp.exterior.coords))
-
+        self.obstacles = obstacles
         self.vertices = [self.start]
         self.edges = []
 
@@ -41,17 +34,18 @@ class RRT:
     # Check that the edge connected x_nearest and x_new does not pass through the any of the obstacle regions.
     # Return True if collision occurs and return false otherwise.
     def CollisionFree(self, x_nearest, x_new):
-        line = sg.LineString([x_nearest, x_new])
-        # # linestrings = list(self.obstacles.exterior.coords)
-        # # print(linestrings)
-        # for obstacle in self.obstacles:
-        #     print(list(obstacle.exterior.coords))
-        #     collision = all(line.intersection(sg.LineStringlinestring) for linestring in list(obstacle.exterior.coords))
-        #     if collision:
-        #         return False
-        # return True
-        print(self.obstacles[0])
-        return not all(line.intersection(sg.LineString(obstacle.exterior.coords)) for obstacle in self.obstacles)
+        # Shortest distance from the center of a circle to a line is given by the following equation:
+        # dist = |a*x0 + b*y0 + c| / sqrt(a^2 + b^2)
+        # where the equation of the line is given by: ax + by + c = 0
+        # and the center of the circle is located at (x0,y0).
+        line_slope = (x_new[1] - x_nearest[1]) / (x_new[0] - x_nearest[0])
+        a = line_slope
+        b = 1
+        c = -line_slope * x_nearest[0] + x_nearest[1]
+        # dist = abs(a*x0 + b*y0 + c) / sqrt(a^2 + b^2)
+        distances = [[abs(a*obstacle[0] + b*obstacle[1] + c) / math.sqrt(a**2 + b**2), obstacle[2]] for obstacle in self.obstacles]
+        print(distances)
+        return all(distance[0] > distance[1] for distance in distances)
         # if line.intersection(self.obstacles):
         #     return False
         # return True
@@ -73,7 +67,6 @@ def getTree(num_iterations, start, goal, obstacles):
             print(x_new)
             rrt.vertices.append(x_new)
             rrt.edges.append([x_nearest, x_new])
-            break
     return rrt.vertices, rrt.edges
 
 
@@ -99,7 +92,7 @@ if __name__ == "__main__":
 
     # ----------------------------------------- Run RRT ----------------------------------------
     
-    vertices, edges = getTree(100, start_coord, goal_coord, obstacle_coords)
+    vertices, edges = getTree(2, start_coord, goal_coord, obstacle_coords)
 
     # -------------------------------------- Create Plots ---------------------------------
     
