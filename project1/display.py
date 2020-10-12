@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-def Display(start_coord, goal_coord, obstacle_coords, vertices, edges):
+def Display(map_coord, start_coord, goal_coord, obstacle_coords, vertices, edges):
 
     # -------------------------------------- Create Plots ---------------------------------
     
@@ -23,7 +23,7 @@ def Display(start_coord, goal_coord, obstacle_coords, vertices, edges):
         obstacle_shape = mpatches.Circle((obstacle[0], obstacle[1]), obstacle[2], color='k')
         plt.gca().add_patch(obstacle_shape)
 
-    plt.axis([0, 100, 0, 100])
+    plt.axis(map_coord)
     plt.title('RRT Map and Final Planned Path')
     plt.ylabel('Y')
     plt.xlabel('X')

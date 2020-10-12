@@ -10,7 +10,8 @@ import numpy as np
 
 class RRT:
     def __init__(self, start, obstacles):
-        self.start = start
+        # Get the (x, y) coordinate
+        self.start = tuple([start[0], start[1]])
         self.obstacles = obstacles
         self.vertices = [self.start]
         self.edges = []
@@ -27,7 +28,6 @@ class RRT:
     
 def getTree(num_iterations, start, goal, obstacles):
     world_size = 100 # (0, 0) -> (100, 100)
-    start = tuple([start[0], start[1]])
 
     rrt = RRT(start, obstacles)
 
@@ -69,4 +69,4 @@ if __name__ == "__main__":
 
     # -------------------------------------- Create Plots ---------------------------------
     
-    display.Display(start_coord, goal_coord, obstacle_coords, vertices, edges)
+    display.Display(map_coord, start_coord, goal_coord, obstacle_coords, vertices, edges)
